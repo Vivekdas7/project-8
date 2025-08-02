@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -8,10 +9,15 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Home className="h-8 w-8 text-blue-400" />
-              <span className="text-2xl font-bold">EliteHomes</span>
-            </div>
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-2">
+              <img
+                src="/logo.jpeg"
+                alt="Logo"
+                className="h-16 w-16 object-contain"
+              />
+            </Link>
+          </div>
             <p className="text-gray-300 leading-relaxed">
               Your trusted partner in finding the perfect home. We specialize in luxury properties and exceptional service.
             </p>
