@@ -112,21 +112,23 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#1e293b] via-[#2e3b5e] to-[#374151] relative">
       {/* Hero Section */}
-      <section className="relative h-[60vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-5 sm:px-6 md:px-8">
+      <section className="relative h-[60vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
+  {/* Background Video + Overlay */}
   <div className="absolute inset-0 z-0">
     <video
       autoPlay
       loop
       muted
       playsInline
-      className="w-full h-full object-cover opacity-80"
+      className="w-full h-full object-cover opacity-60 sm:opacity-80"
     >
       <source src="/mobile.mp4" type="video/mp4" />
     </video>
     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-indigo-900/70 to-blue-800/80" />
   </div>
 
-  <div className="relative z-10 max-w-3xl w-full text-center glass-card py-12 px-6 rounded-3xl border border-white/20 backdrop-blur-lg shadow-2xl flex flex-col items-center">
+  {/* Content Card */}
+  <div className="relative z-10 max-w-3xl w-full text-center glass-card py-8 px-4 sm:py-12 sm:px-6 rounded-3xl border border-white/20 backdrop-blur-lg shadow-2xl flex flex-col items-center">
     <h1 className="font-extrabold text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl leading-tight mb-5 drop-shadow-lg">
       Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
     </h1>
@@ -138,9 +140,10 @@ const Home = () => {
     <form
       onSubmit={handleSearch} // your search handler here
       autoComplete="off"
-      className="w-full flex flex-col space-y-4 xs:space-y-0 xs:flex-row xs:space-x-4 max-w-xl"
+      className="w-full flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:flex-wrap sm:justify-center gap-4 max-w-xl"
     >
-      <div className="relative flex-1">
+      {/* Search Input */}
+      <div className="relative flex-1 w-full sm:w-auto">
         <Search className="absolute top-4 left-5 h-5 w-5 text-gray-400" />
         <input
           type="text"
@@ -148,14 +151,16 @@ const Home = () => {
           onChange={e => setQuery(e.target.value)}
           placeholder="Location, property type, or keywords..."
           className="w-full pl-12 pr-4 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold"
-          onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+          onFocus={() => {
+            if (suggestions.length > 0) setShowSuggestions(true);
+          }}
         />
         {showSuggestions && (
           <ul className="absolute z-30 top-full left-0 right-0 max-h-52 overflow-y-auto bg-white rounded-b-3xl border border-t-0 border-gray-300 shadow-lg text-gray-900 text-base">
             {suggestions.map((sugg, idx) => (
               <li
                 key={idx}
-                className="px-6 py-3 cursor-pointer hover:bg-blue-100"
+                className="px-6 py-4 text-base sm:text-lg cursor-pointer hover:bg-blue-100"
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => handleSuggestionClick(sugg)}
               >
@@ -166,40 +171,47 @@ const Home = () => {
         )}
       </div>
 
-      <select
-        value={mode}
-        onChange={e => setMode(e.target.value)}
-        className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none"
-        aria-label="Transaction type"
-      >
-        <option>Buy</option>
-        <option>Rent</option>
-      </select>
+      {/* Dropdowns & Button */}
+      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        {/* Transaction Type */}
+        <select
+          value={mode}
+          onChange={e => setMode(e.target.value)}
+          className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none w-full sm:w-auto"
+          aria-label="Transaction type"
+        >
+          <option>Buy</option>
+          <option>Rent</option>
+        </select>
 
-      <select
-        value={type}
-        onChange={e => setType(e.target.value)}
-        className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none"
-        aria-label="Property type"
-      >
-        <option>All Types</option>
-        <option>House</option>
-        <option>Condo</option>
-        <option>Apartment</option>
-        <option>Townhouse</option>
-        <option>Cabin</option>
-      </select>
+        {/* Property Type */}
+        <select
+          value={type}
+          onChange={e => setType(e.target.value)}
+          className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none w-full sm:w-auto"
+          aria-label="Property type"
+        >
+          <option>All Types</option>
+          <option>House</option>
+          <option>Condo</option>
+          <option>Apartment</option>
+          <option>Townhouse</option>
+          <option>Cabin</option>
+        </select>
 
-      <button
-        type="submit"
-        className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-8 py-3 text-lg font-bold text-blue-900 shadow-lg transition"
-      >
-        <Search className="h-5 w-5 mr-2" />
-        Search
-      </button>
+        {/* Search Button */}
+        <button
+          type="submit"
+          className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-8 py-3 text-lg font-bold text-blue-900 shadow-lg transition w-full sm:w-auto"
+        >
+          <Search className="h-5 w-5 mr-2" />
+          Search
+        </button>
+      </div>
     </form>
   </div>
 </section>
+
 
 
 
