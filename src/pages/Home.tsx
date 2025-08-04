@@ -7,6 +7,7 @@ import {
   Bath,
   Square,
   ArrowRight,
+  X,
 } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
@@ -15,12 +16,45 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import { properties, Property } from '../data/properties';
+import Enquire from './Enquire'; // Adjust path if needed
+
+const Modal: React.FC<{ show: boolean; onClose: () => void; children: React.ReactNode }> = ({ show, onClose, children }) => {
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    if (show) window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [show, onClose]);
+
+  if (!show) return null;
+  return (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-60 backdrop-blur-sm transition-opacity"
+    >
+      <div onClick={e => e.stopPropagation()} className="glass-card relative max-w-md w-full p-8 rounded-3xl border border-white/20 shadow-2xl">
+        <button
+          onClick={onClose}
+          aria-label="Close modal"
+          className="absolute top-4 right-4 text-white hover:text-yellow-400 transition"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+};
 
 const Home = () => {
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState("Buy");
   const [type, setType] = useState("All Types");
   const [searchResults, setSearchResults] = useState<Property[] | null>(null);
+
+  // Automatically show enquiry modal on page load
+  const [showEnquire, setShowEnquire] = useState(true);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -99,6 +133,7 @@ const Home = () => {
 
     setSearchResults(filtered);
     setShowSuggestions(false);
+    setShowEnquire(false); // Hide modal on new search for better UX
   };
 
   const featuredProperties = searchResults === null
@@ -109,7 +144,6 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-r from-[#1e293b] via-[#2e3b5e] to-[#374151] relative">
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Animated background gradient overlay */}
         <div className="absolute inset-0 z-0">
           <video
             autoPlay
@@ -122,7 +156,6 @@ const Home = () => {
           </video>
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-indigo-800/70 to-blue-700/70" />
         </div>
-        {/* Centered glass card */}
         <div className="relative z-10 w-full max-w-3xl mx-auto px-2">
           <div className="glass-card py-12 px-8 mb-8 border border-white/20 flex flex-col items-center shadow-2xl">
             <h1 className="text-5xl sm:text-7xl font-extrabold text-white mb-5 leading-tight tracking-tight drop-shadow-2xl">
@@ -132,7 +165,6 @@ const Home = () => {
               Discover the perfect property with <span className="font-bold text-blue-200">expert guidance</span> and <span className="font-bold text-blue-200">personalized service</span>.
             </p>
           </div>
-          {/* Enhanced Floating Search Card */}
           <form
             className="glass-card py-6 px-6 md:px-8 flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 items-stretch relative border border-white/20 shadow-2xl backdrop-blur-2xl"
             onSubmit={handleSearch}
@@ -291,7 +323,10 @@ const Home = () => {
             {searchResults !== null && (
               <div className="text-center mt-12">
                 <button
-                  onClick={() => setSearchResults(null)}
+                  onClick={() => {
+                    setSearchResults(null);
+                    setShowEnquire(false);
+                  }}
                   className="rounded-full bg-gradient-to-r from-blue-700 to-blue-500 text-white px-8 py-4 text-lg font-bold shadow hover:bg-yellow-400 hover:text-blue-900 transition-colors duration-150"
                 >
                   Back to Featured Properties
@@ -312,6 +347,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Enquire Popup Modal */}
+   
     </div>
   );
 };
