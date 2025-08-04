@@ -112,8 +112,8 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#1e293b] via-[#2e3b5e] to-[#374151] relative">
       {/* Hero Section */}
-      <section className="relative h-[60vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
-  {/* Background Video + Overlay */}
+      <section className="relative h-[65vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
+  {/* Background Video and Overlay */}
   <div className="absolute inset-0 z-0">
     <video
       autoPlay
@@ -127,40 +127,40 @@ const Home = () => {
     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-indigo-900/70 to-blue-800/80" />
   </div>
 
-  {/* Content Card */}
-  <div className="relative z-10 max-w-3xl w-full text-center glass-card py-8 px-4 sm:py-12 sm:px-6 rounded-3xl border border-white/20 backdrop-blur-lg shadow-2xl flex flex-col items-center">
-    <h1 className="font-extrabold text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl leading-tight mb-5 drop-shadow-lg">
+  {/* Foreground Content */}
+  <div className="relative z-10 max-w-3xl w-full text-center glass-card py-6 px-4 sm:py-10 sm:px-6 rounded-3xl border border-white/20 backdrop-blur-lg shadow-2xl flex flex-col items-center">
+    <h1 className="font-extrabold text-white text-2xl sm:text-4xl md:text-5xl leading-tight mb-4 drop-shadow-lg">
       Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
     </h1>
-    <p className="text-white/90 max-w-md xs:max-w-xl text-base xs:text-lg sm:text-xl md:text-2xl mb-10">
+    <p className="text-white/90 max-w-md sm:max-w-xl text-sm sm:text-base md:text-lg mb-6">
       Discover the perfect property with our expert guidance and personalized service.
     </p>
 
     {/* Search Form */}
     <form
-      onSubmit={handleSearch} // your search handler here
+      onSubmit={handleSearch}
       autoComplete="off"
-      className="w-full flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:flex-wrap sm:justify-center gap-4 max-w-xl"
+      className="w-full max-w-xl flex flex-col space-y-3"
     >
-      {/* Search Input */}
-      <div className="relative flex-1 w-full sm:w-auto">
-        <Search className="absolute top-4 left-5 h-5 w-5 text-gray-400" />
+      {/* Input */}
+      <div className="relative w-full">
+        <Search className="absolute top-3 left-4 h-5 w-5 text-gray-400" />
         <input
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Location, property type, or keywords..."
-          className="w-full pl-12 pr-4 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold"
+          className="pl-11 pr-4 py-2 text-sm rounded-3xl w-full border border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-400"
           onFocus={() => {
             if (suggestions.length > 0) setShowSuggestions(true);
           }}
         />
         {showSuggestions && (
-          <ul className="absolute z-30 top-full left-0 right-0 max-h-52 overflow-y-auto bg-white rounded-b-3xl border border-t-0 border-gray-300 shadow-lg text-gray-900 text-base">
+          <ul className="absolute z-30 top-full left-0 right-0 max-h-52 overflow-y-auto bg-white rounded-b-3xl border border-t-0 border-gray-300 shadow text-gray-900 text-sm">
             {suggestions.map((sugg, idx) => (
               <li
                 key={idx}
-                className="px-6 py-4 text-base sm:text-lg cursor-pointer hover:bg-blue-100"
+                className="px-5 py-3 cursor-pointer hover:bg-blue-100"
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => handleSuggestionClick(sugg)}
               >
@@ -171,25 +171,21 @@ const Home = () => {
         )}
       </div>
 
-      {/* Dropdowns & Button */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-        {/* Transaction Type */}
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 w-full">
         <select
           value={mode}
           onChange={e => setMode(e.target.value)}
-          className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none w-full sm:w-auto"
-          aria-label="Transaction type"
+          className="w-full sm:flex-1 px-4 py-2 text-sm rounded-3xl border border-gray-300 text-gray-900 font-medium focus:ring-2 focus:ring-blue-400"
         >
           <option>Buy</option>
           <option>Rent</option>
         </select>
 
-        {/* Property Type */}
         <select
           value={type}
           onChange={e => setType(e.target.value)}
-          className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none w-full sm:w-auto"
-          aria-label="Property type"
+          className="w-full sm:flex-1 px-4 py-2 text-sm rounded-3xl border border-gray-300 text-gray-900 font-medium focus:ring-2 focus:ring-blue-400"
         >
           <option>All Types</option>
           <option>House</option>
@@ -198,19 +194,21 @@ const Home = () => {
           <option>Townhouse</option>
           <option>Cabin</option>
         </select>
-
-        {/* Search Button */}
-        <button
-          type="submit"
-          className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-8 py-3 text-lg font-bold text-blue-900 shadow-lg transition w-full sm:w-auto"
-        >
-          <Search className="h-5 w-5 mr-2" />
-          Search
-        </button>
       </div>
+
+      {/* Search Button */}
+      <button
+        type="submit"
+        className="w-full bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-4 py-2 text-sm font-bold text-blue-900 shadow-lg transition"
+      >
+        <Search className="h-5 w-5 mr-2" />
+        Search
+      </button>
     </form>
   </div>
 </section>
+
+
 
 
 
