@@ -7,7 +7,10 @@ import {
   Bath,
   Square,
   ArrowRight,
-  X,
+  Users,
+  Star,
+  Mail,
+  Phone,
 } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
@@ -16,45 +19,12 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import { properties, Property } from '../data/properties';
-import Enquire from './Enquire'; // Adjust path if needed
-
-const Modal: React.FC<{ show: boolean; onClose: () => void; children: React.ReactNode }> = ({ show, onClose, children }) => {
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    if (show) window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [show, onClose]);
-
-  if (!show) return null;
-  return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-60 backdrop-blur-sm transition-opacity"
-    >
-      <div onClick={e => e.stopPropagation()} className="glass-card relative max-w-md w-full p-8 rounded-3xl border border-white/20 shadow-2xl">
-        <button
-          onClick={onClose}
-          aria-label="Close modal"
-          className="absolute top-4 right-4 text-white hover:text-yellow-400 transition"
-        >
-          <X className="w-6 h-6" />
-        </button>
-        {children}
-      </div>
-    </div>
-  );
-};
 
 const Home = () => {
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState("Buy");
   const [type, setType] = useState("All Types");
   const [searchResults, setSearchResults] = useState<Property[] | null>(null);
-
-  // Automatically show enquiry modal on page load
-  const [showEnquire, setShowEnquire] = useState(true);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -133,7 +103,6 @@ const Home = () => {
 
     setSearchResults(filtered);
     setShowSuggestions(false);
-    setShowEnquire(false); // Hide modal on new search for better UX
   };
 
   const featuredProperties = searchResults === null
@@ -154,203 +123,301 @@ const Home = () => {
           >
             <source src="/mobile.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-indigo-800/70 to-blue-700/70" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-blue-700/70" />
         </div>
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-2">
-          <div className="glass-card py-12 px-8 mb-8 border border-white/20 flex flex-col items-center shadow-2xl">
-            <h1 className="text-5xl sm:text-7xl font-extrabold text-white mb-5 leading-tight tracking-tight drop-shadow-2xl">
-              Find Your <span className="block text-yellow-400 animate-pulse">Dream Home</span>
+        <div className="relative z-10 w-full max-w-3xl mx-auto px-6">
+          <div className="glass-card py-16 px-10 border border-white/20 flex flex-col items-center shadow-2xl rounded-3xl text-center">
+            <h1 className="text-6xl font-extrabold text-white mb-4 leading-tight drop-shadow-xl">
+              Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
             </h1>
-            <p className="text-2xl text-white/90 mb-3 font-medium text-center drop-shadow">
-              Discover the perfect property with <span className="font-bold text-blue-200">expert guidance</span> and <span className="font-bold text-blue-200">personalized service</span>.
+            <p className="text-2xl text-white/90 max-w-xl mb-8">
+              Discover the perfect property with our expert guidance and personalized service.
+            </p>
+            {/* Search Form */}
+            <form
+              className="w-full max-w-4xl flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4"
+              onSubmit={handleSearch}
+              autoComplete="off"
+            >
+              <div className="relative flex-1" ref={inputRef}>
+                <Search className="absolute top-3 left-4 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="Location, property type, or keywords..."
+                  className="w-full pl-12 pr-4 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold bg-white"
+                  onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+                />
+                {showSuggestions && (
+                  <ul className="absolute z-20 top-full left-0 right-0 bg-white border border-gray-300 rounded-b-3xl max-h-60 overflow-y-auto shadow-lg text-gray-900 text-base">
+                    {suggestions.map((sugg, idx) => (
+                      <li
+                        key={idx}
+                        className="px-6 py-3 cursor-pointer hover:bg-blue-100"
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => handleSuggestionClick(sugg)}
+                      >
+                        {sugg}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <select
+                value={mode}
+                onChange={e => setMode(e.target.value)}
+                className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
+              >
+                <option>Buy</option>
+                <option>Rent</option>
+              </select>
+
+              <select
+                value={type}
+                onChange={e => setType(e.target.value)}
+                className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
+              >
+                <option>All Types</option>
+                <option>House</option>
+                <option>Condo</option>
+                <option>Apartment</option>
+                <option>Townhouse</option>
+                <option>Cabin</option>
+              </select>
+
+              <button
+                type="submit"
+                className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-10 py-4 text-xl font-bold text-blue-900 shadow-lg transition"
+              >
+                <Search className="h-6 w-6 mr-2" />
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured / Search Results */}
+      <section className="py-20 bg-white/10 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-extrabold text-white mb-4">
+              {searchResults === null ? 'Featured Properties' : 'Search Results'}
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              {searchResults === null
+                ? 'Discover our handpicked selection of premium properties that offer exceptional value and luxury.'
+                : 'Browse the properties that match your search.'}
             </p>
           </div>
-          <form
-            className="glass-card py-6 px-6 md:px-8 flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 items-stretch relative border border-white/20 shadow-2xl backdrop-blur-2xl"
-            onSubmit={handleSearch}
-            autoComplete="off"
-          >
-            <div className="relative flex-1" ref={inputRef}>
-              <input
-                type="text"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="Location, property type, or keywords..."
-                className="w-full px-4 py-3 rounded-full border-none focus:ring-2 focus:ring-blue-400 outline-none text-gray-900 font-medium transition-shadow bg-white/80 shadow-inner"
-                onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
-              />
-              {showSuggestions && (
-                <ul className="absolute z-20 top-full left-0 right-0 bg-white/95 rounded-b-xl max-h-60 overflow-auto shadow-lg text-gray-900 text-sm">
-                  {suggestions.map((sugg, idx) => (
-                    <li
-                      key={idx}
-                      className="px-4 py-2 cursor-pointer hover:bg-blue-100"
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => handleSuggestionClick(sugg)}
-                    >
-                      {sugg}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
 
-            <select
-              value={mode}
-              onChange={e => setMode(e.target.value)}
-              className="px-4 py-3 rounded-full border-none focus:ring-2 focus:ring-blue-400 text-gray-900 font-bold outline-none transition-shadow bg-white/80 shadow-inner"
+          {featuredProperties.length === 0 ? (
+            <p className="text-center text-gray-400 text-2xl py-20">
+              No properties found. Try changing your search criteria.
+            </p>
+          ) : (
+            <Swiper
+              modules={[Navigation, Pagination, EffectCoverflow]}
+              spaceBetween={30}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              effect="coverflow"
+              coverflowEffect={{
+                rotate: 30,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+              }}
+              breakpoints={{
+                640: { slidesPerView: 1.1 },
+                1024: { slidesPerView: 2.2 },
+                1280: { slidesPerView: 3 },
+              }}
+              className="w-full pb-12"
+              style={{ padding: '12px 0' }}
             >
-              <option>Buy</option>
-              <option>Rent</option>
-            </select>
-            <select
-              value={type}
-              onChange={e => setType(e.target.value)}
-              className="px-4 py-3 rounded-full border-none focus:ring-2 focus:ring-blue-400 text-gray-900 font-bold outline-none transition-shadow bg-white/80 shadow-inner"
-            >
-              <option>All Types</option>
-              <option>House</option>
-              <option>Condo</option>
-              <option>Apartment</option>
-              <option>Townhouse</option>
-              <option>Cabin</option>
-            </select>
-            <button
-              type="submit"
-              className="flex items-center space-x-2 rounded-full bg-blue-700 px-8 py-3 font-semibold shadow-lg text-white transition hover:bg-yellow-400 hover:text-blue-900 active:scale-95 duration-150 focus:ring-2 focus:ring-blue-400"
-            >
-              <Search className="h-5 w-5" />
-              <span>Search</span>
-            </button>
-          </form>
+              {featuredProperties.map((property) => (
+                <SwiperSlide key={property.id}>
+                  <PropertyCard property={property} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </section>
 
-      {/* Featured/Search Results Section */}
-      <section className="py-24 min-h-[40vh] bg-transparent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-          <div className="glass-card py-10 px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-5xl font-extrabold text-gray-900 mb-5 tracking-tight">
-                {searchResults === null ? 'Featured Properties' : 'Search Results'}
-              </h2>
-              <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-                {searchResults === null
-                  ? 'Discover our handpicked selection of premium properties that offer exceptional value and luxury.'
-                  : 'Browse the properties that match your search.'}
-              </p>
-            </div>
-            {featuredProperties.length === 0 ? (
-              <div className="text-center text-gray-500 text-2xl py-16 rounded-3xl bg-white/60 shadow-inner">
-                No properties found. Try changing your search criteria.
-              </div>
-            ) : (
-              <Swiper
-                modules={[Navigation, Pagination, EffectCoverflow]}
-                spaceBetween={30}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-                effect="coverflow"
-                coverflowEffect={{
-                  rotate: 30,
-                  stretch: 0,
-                  depth: 100,
-                  modifier: 1,
-                  slideShadows: true
-                }}
-                breakpoints={{
-                  640: { slidesPerView: 1.1 },
-                  1024: { slidesPerView: 2.2 },
-                  1280: { slidesPerView: 3 }
-                }}
-                className="w-full pb-12"
-                style={{ padding: "12px 0" }}
-              >
-                {featuredProperties.map((property) => (
-                  <SwiperSlide key={property.id}>
-                    <div className="glass-card overflow-hidden border border-white/15 transition-transform duration-200 group relative max-w-lg mx-auto h-full shadow-2xl">
-                      <div className="relative">
-                        <img
-                          src={property.images[0]}
-                          alt={property.title}
-                          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-1 rounded-full text-sm font-medium shadow">
-                            {property.status}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-6">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-2xl font-bold text-gray-900 line-clamp-1">{property.title}</h3>
-                          <span className="text-2xl font-bold text-blue-700">
-                            ${property.price.toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-blue-700 mb-3">
-                          <MapPin className="h-5 w-5 mr-1" />
-                          <span className="text-md">{property.location}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-gray-700 mb-6 text-base">
-                          <div className="flex items-center gap-1">
-                            <Bed className="h-5 w-5 mr-1" />
-                            <span>{property.bedrooms} bed</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Bath className="h-5 w-5 mr-1" />
-                            <span>{property.bathrooms} bath</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Square className="h-5 w-5 mr-1" />
-                            <span>{property.sqft} sqft</span>
-                          </div>
-                        </div>
-                        <Link
-                          to={`/property/${property.id}`}
-                          className="w-full rounded-full bg-blue-700 text-white py-3 px-4 mt-3 flex items-center justify-center gap-2 font-semibold shadow hover:bg-yellow-400 hover:text-blue-900 transition-colors duration-200 active:scale-95"
-                        >
-                          <span>View Details</span>
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            )}
-            {searchResults !== null && (
-              <div className="text-center mt-12">
-                <button
-                  onClick={() => {
-                    setSearchResults(null);
-                    setShowEnquire(false);
-                  }}
-                  className="rounded-full bg-gradient-to-r from-blue-700 to-blue-500 text-white px-8 py-4 text-lg font-bold shadow hover:bg-yellow-400 hover:text-blue-900 transition-colors duration-150"
-                >
-                  Back to Featured Properties
-                </button>
-              </div>
-            )}
-            {searchResults === null && (
-              <div className="text-center mt-12">
-                <Link
-                  to="/properties"
-                  className="inline-flex items-center gap-2 rounded-full bg-gray-900 text-white px-8 py-4 text-lg font-semibold shadow hover:bg-gray-800 active:scale-95 transition"
-                >
-                  <span>View All Properties</span>
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-              </div>
-            )}
-          </div>
+      {/* About Section */}
+      <section className="py-20 bg-white/20 backdrop-blur-lg rounded-3xl max-w-7xl mx-auto px-8 my-20 shadow-xl glass-card">
+        <h2 className="text-5xl font-extrabold text-white text-center mb-8">About Us</h2>
+        <p className="text-xl text-gray-200 max-w-4xl mx-auto text-center leading-relaxed">
+          At Dream Homes, we believe that finding a home is about more than just buying a property – it’s about discovering a place where your life’s next chapter unfolds. Our expert team is here to guide you every step of the way with personal service, deep market knowledge, and dedication to your satisfaction.
+        </p>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white/10 backdrop-blur-md max-w-7xl mx-auto px-6 rounded-3xl shadow-lg glass-card">
+        <h2 className="text-5xl font-extrabold text-white text-center mb-12">What Our Clients Say</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <TestimonialCard
+            name="Emily R."
+            feedback="Dream Homes made buying my first house easy and exciting! Their knowledge and attention to detail gave me full confidence throughout."
+            rating={5}
+          />
+          <TestimonialCard
+            name="Mark S."
+            feedback="I rented a condo through Dream Homes and the process was smooth and transparent. Highly recommend their professional team."
+            rating={4}
+          />
+          <TestimonialCard
+            name="Sophia L."
+            feedback="Excellent service and support when selling my property. The team’s marketing expertise brought great offers quickly."
+            rating={5}
+          />
         </div>
       </section>
 
-      {/* Enquire Popup Modal */}
-   
+      {/* Contact Section */}
+    
     </div>
+  );
+};
+
+// PropertyCard Component for featured listings
+const PropertyCard = ({ property }: { property: Property }) => (
+  <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-lg border border-white/20 overflow-hidden transition hover:shadow-2xl">
+    <div className="relative overflow-hidden rounded-t-3xl">
+      <img
+        src={property.images[0]}
+        alt={property.title}
+        className="w-full h-64 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105"
+      />
+      <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-lg backdrop-blur-sm">
+        {property.status}
+      </div>
+    </div>
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-2xl font-semibold text-white line-clamp-1">{property.title}</h3>
+        <span className="text-2xl font-bold text-blue-400">
+          {property.status === 'For Rent' ? `$${property.price.toLocaleString()}/mo` : `$${property.price.toLocaleString()}`}
+        </span>
+      </div>
+      <div className="flex items-center text-blue-300 mb-4 text-sm">
+        <MapPin className="h-4 w-4 mr-1" />
+        <span>{property.location}</span>
+      </div>
+      <p className="text-blue-200 mb-6 line-clamp-3">{property.description}</p>
+      <Link
+        to={`/property/${property.id}`}
+        className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl text-center transition"
+      >
+        View Details
+      </Link>
+    </div>
+  </div>
+);
+
+// Testimonial Card
+const TestimonialCard = ({ name, feedback, rating }: { name: string; feedback: string; rating: number }) => (
+  <div className="glass-card p-6 rounded-3xl bg-white/20 backdrop-blur-lg border border-white/30 shadow-xl text-blue-900 flex flex-col justify-between">
+    <p className="mb-6 text-lg italic">"{feedback}"</p>
+    <div className="flex items-center justify-between">
+      <span className="font-bold text-xl">{name}</span>
+      <Stars rating={rating} />
+    </div>
+  </div>
+);
+
+// Stars Component
+const Stars = ({ rating }: { rating: number }) => {
+  return (
+    <div className="flex space-x-1 text-yellow-400">
+      {Array(5).fill(0).map((_, i) => (
+        <StarIcon key={i} filled={i < rating} />
+      ))}
+    </div>
+  );
+};
+
+const StarIcon = ({ filled }: { filled: boolean }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`h-5 w-5 ${filled ? 'fill-current' : 'fill-none stroke-current'}`}
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.03 6.27a1 1 0 00.95.69h6.626c.967 0 1.371 1.24.588 1.81l-5.37 3.895a1 1 0 00-.363 1.118l2.03 6.271c.3.92-.755 1.688-1.538 1.118l-5.371-3.895a1 1 0 00-1.175 0l-5.37 3.895c-.783.57-1.838-.197-1.538-1.118l2.03-6.27a1 1 0 00-.363-1.118L2.445 11.7c-.783-.57-.38-1.81.588-1.81h6.626a1 1 0 00.95-.69l2.03-6.273z" />
+  </svg>
+);
+
+// Contact Form
+const ContactForm = () => {
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Submit logic here (e.g., API call)
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="text-center text-green-400 text-xl font-semibold py-8">
+        Thank you for reaching out! We'll get back to you shortly.
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-6">
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Your Name"
+        required
+        className="w-full px-5 py-3 rounded-3xl border border-white/40 bg-white/20 backdrop-blur-md text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Your Email"
+        required
+        className="w-full px-5 py-3 rounded-3xl border border-white/40 bg-white/20 backdrop-blur-md text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      <textarea
+        name="message"
+        value={formData.message}
+        onChange={handleChange}
+        placeholder="Your Message"
+        rows={5}
+        required
+        className="w-full px-5 py-3 rounded-3xl border border-white/40 bg-white/20 backdrop-blur-md text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+      />
+      <button
+        type="submit"
+        className="w-full bg-gradient-to-r from-yellow-400 to-yellow-300 hover:from-yellow-500 hover:to-yellow-400 rounded-3xl py-4 font-semibold text-blue-900 shadow-lg transition-transform active:scale-95"
+      >
+        Send Message
+      </button>
+    </form>
   );
 };
 

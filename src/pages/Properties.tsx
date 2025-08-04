@@ -42,19 +42,19 @@ const Properties = () => {
   }, [searchTerm, statusFilter, typeFilter, priceRange]);
 
   const PropertyCard = ({ property, isListView = false }: { property: any, isListView?: boolean }) => (
-    <div className={`bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group ${
+    <div className={`bg-white/30 backdrop-blur-lg border border-white/20 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group ${
       isListView ? 'flex' : ''
     }`}>
       <div className={`relative overflow-hidden ${isListView ? 'w-1/3' : ''}`}>
         <img
           src={property.images[0]}
           alt={property.title}
-          className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
-            isListView ? 'w-full h-full' : 'w-full h-64'
+          className={`object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl ${ 
+            isListView ? 'w-full h-full rounded-l-2xl rounded-tr-none' : 'w-full h-64'
           }`}
         />
         <div className="absolute top-4 left-4">
-          <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+          <span className="bg-blue-600/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium shadow">
             {property.status}
           </span>
         </div>
@@ -68,31 +68,31 @@ const Properties = () => {
           </span>
         </div>
         
-        <div className="flex items-center text-gray-600 mb-4">
+        <div className="flex items-center text-gray-700 mb-4">
           <MapPin className="h-4 w-4 mr-1" />
           <span className="text-sm">{property.location}</span>
         </div>
         
-        <p className="text-gray-600 mb-4 line-clamp-2">{property.description}</p>
+        <p className="text-gray-700 mb-4 line-clamp-2">{property.description}</p>
         
         <div className="flex items-center justify-between text-gray-600 mb-6">
           <div className="flex items-center">
-            <Bed className="h-4 w-4 mr-1" />
+            <Bed className="h-4 w-4 mr-1 text-blue-600" />
             <span className="text-sm">{property.bedrooms} bed</span>
           </div>
           <div className="flex items-center">
-            <Bath className="h-4 w-4 mr-1" />
+            <Bath className="h-4 w-4 mr-1 text-blue-600" />
             <span className="text-sm">{property.bathrooms} bath</span>
           </div>
           <div className="flex items-center">
-            <Square className="h-4 w-4 mr-1" />
+            <Square className="h-4 w-4 mr-1 text-blue-600" />
             <span className="text-sm">{property.sqft} sqft</span>
           </div>
         </div>
         
         <Link
           to={`/property/${property.id}`}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 group"
+          className="w-full bg-blue-600/90 hover:bg-blue-700/90 text-white py-3 px-4 rounded-md transition-colors flex items-center justify-center space-x-2 group font-medium shadow-lg"
         >
           <span>View Details</span>
           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -102,34 +102,32 @@ const Properties = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Properties</h1>
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Properties</h1>
           <p className="text-xl text-gray-600">Discover your perfect home from our extensive collection</p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-white/70 backdrop-blur-md rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
-            <div className="lg:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search properties..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+            <div className="lg:col-span-2 relative">
+              <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search properties..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition"
+              />
             </div>
-            
+
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 shadow-sm transition"
             >
               <option value="All">All Status</option>
               <option value="For Sale">For Sale</option>
@@ -140,7 +138,7 @@ const Properties = () => {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 shadow-sm transition"
             >
               <option value="All">All Types</option>
               <option value="House">House</option>
@@ -153,7 +151,7 @@ const Properties = () => {
             <select
               value={priceRange}
               onChange={(e) => setPriceRange(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 shadow-sm transition"
             >
               <option value="All">All Prices</option>
               <option value="Under 500k">Under $500k</option>
@@ -162,12 +160,13 @@ const Properties = () => {
               <option value="Over 2M">Over $2M</option>
             </select>
 
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center justify-end">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-3 rounded-md transition-colors ${
                   viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                 }`}
+                aria-label="Grid View"
               >
                 <Grid className="h-5 w-5" />
               </button>
@@ -176,6 +175,7 @@ const Properties = () => {
                 className={`p-3 rounded-md transition-colors ${
                   viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                 }`}
+                aria-label="List View"
               >
                 <List className="h-5 w-5" />
               </button>
@@ -189,29 +189,21 @@ const Properties = () => {
         </div>
 
         {/* Properties Grid/List */}
-        <div className={`${
-          viewMode === 'grid' 
-            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' 
-            : 'space-y-6'
-        }`}>
-          {filteredProperties.map((property) => (
-            <PropertyCard 
-              key={property.id} 
-              property={property} 
-              isListView={viewMode === 'list'} 
-            />
-          ))}
-        </div>
-
-        {filteredProperties.length === 0 && (
-          <div className="text-center py-12">
-            <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
-              <Search className="h-12 w-12 text-gray-400" />
+        <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' : 'space-y-6'}`}>
+          {filteredProperties.length > 0 ? (
+            filteredProperties.map(property => (
+              <PropertyCard key={property.id} property={property} isListView={viewMode === 'list'} />
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                <Search className="h-12 w-12 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Properties Found</h3>
+              <p className="text-gray-600">Try adjusting your search criteria to find more properties.</p>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Properties Found</h3>
-            <p className="text-gray-600">Try adjusting your search criteria to find more properties.</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
