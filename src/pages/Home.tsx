@@ -112,7 +112,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#1e293b] via-[#2e3b5e] to-[#374151] relative">
       {/* Hero Section */}
-      <section className="relative h-[70vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
+      <section className="relative h-[60vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-5 sm:px-6 md:px-8">
   <div className="absolute inset-0 z-0">
     <video
       autoPlay
@@ -123,82 +123,85 @@ const Home = () => {
     >
       <source src="/mobile.mp4" type="video/mp4" />
     </video>
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-blue-700/70" />
+    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-indigo-900/70 to-blue-800/80" />
   </div>
-  <div className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6">
-    <div className="glass-card py-12 px-6 sm:px-10 border border-white/20 flex flex-col items-center shadow-2xl rounded-3xl text-center">
-      <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight drop-shadow-xl">
-        Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
-      </h1>
-      <p className="text-lg sm:text-2xl text-white/90 max-w-xl mb-8">
-        Discover the perfect property with our expert guidance and personalized service.
-      </p>
 
-      {/* Search Form */}
-      <form
-        className="w-full max-w-4xl flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4"
-        onSubmit={handleSearch} // your handler here
-        autoComplete="off"
+  <div className="relative z-10 max-w-3xl w-full text-center glass-card py-12 px-6 rounded-3xl border border-white/20 backdrop-blur-lg shadow-2xl flex flex-col items-center">
+    <h1 className="font-extrabold text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl leading-tight mb-5 drop-shadow-lg">
+      Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
+    </h1>
+    <p className="text-white/90 max-w-md xs:max-w-xl text-base xs:text-lg sm:text-xl md:text-2xl mb-10">
+      Discover the perfect property with our expert guidance and personalized service.
+    </p>
+
+    {/* Search Form */}
+    <form
+      onSubmit={handleSearch} // your search handler here
+      autoComplete="off"
+      className="w-full flex flex-col space-y-4 xs:space-y-0 xs:flex-row xs:space-x-4 max-w-xl"
+    >
+      <div className="relative flex-1">
+        <Search className="absolute top-4 left-5 h-5 w-5 text-gray-400" />
+        <input
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Location, property type, or keywords..."
+          className="w-full pl-12 pr-4 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold"
+          onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+        />
+        {showSuggestions && (
+          <ul className="absolute z-30 top-full left-0 right-0 max-h-52 overflow-y-auto bg-white rounded-b-3xl border border-t-0 border-gray-300 shadow-lg text-gray-900 text-base">
+            {suggestions.map((sugg, idx) => (
+              <li
+                key={idx}
+                className="px-6 py-3 cursor-pointer hover:bg-blue-100"
+                onMouseDown={e => e.preventDefault()}
+                onClick={() => handleSuggestionClick(sugg)}
+              >
+                {sugg}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <select
+        value={mode}
+        onChange={e => setMode(e.target.value)}
+        className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none"
+        aria-label="Transaction type"
       >
-        <div className="relative flex-1">
-          <Search className="absolute top-3 left-4 h-5 w-5 text-gray-400" />
-          <input
-            type="text"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Location, property type, or keywords..."
-            className="w-full pl-12 pr-4 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold bg-white"
-            onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
-          />
-          {showSuggestions && (
-            <ul className="absolute z-20 top-full left-0 right-0 max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-b-3xl shadow-lg text-gray-900 text-base">
-              {suggestions.map((sugg, idx) => (
-                <li
-                  key={idx}
-                  className="px-6 py-3 cursor-pointer hover:bg-blue-100"
-                  onMouseDown={e => e.preventDefault()}
-                  onClick={() => handleSuggestionClick(sugg)}
-                >
-                  {sugg}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <option>Buy</option>
+        <option>Rent</option>
+      </select>
 
-        <select
-          value={mode}
-          onChange={e => setMode(e.target.value)}
-          className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
-        >
-          <option>Buy</option>
-          <option>Rent</option>
-        </select>
+      <select
+        value={type}
+        onChange={e => setType(e.target.value)}
+        className="px-5 py-3 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none"
+        aria-label="Property type"
+      >
+        <option>All Types</option>
+        <option>House</option>
+        <option>Condo</option>
+        <option>Apartment</option>
+        <option>Townhouse</option>
+        <option>Cabin</option>
+      </select>
 
-        <select
-          value={type}
-          onChange={e => setType(e.target.value)}
-          className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
-        >
-          <option>All Types</option>
-          <option>House</option>
-          <option>Condo</option>
-          <option>Apartment</option>
-          <option>Townhouse</option>
-          <option>Cabin</option>
-        </select>
-
-        <button
-          type="submit"
-          className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-10 py-4 text-xl font-bold text-blue-900 shadow-lg transition"
-        >
-          <Search className="h-6 w-6 mr-2" />
-          Search
-        </button>
-      </form>
-    </div>
+      <button
+        type="submit"
+        className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-8 py-3 text-lg font-bold text-blue-900 shadow-lg transition"
+      >
+        <Search className="h-5 w-5 mr-2" />
+        Search
+      </button>
+    </form>
   </div>
 </section>
+
+
 
 
       {/* Featured / Search Results */}
