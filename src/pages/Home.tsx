@@ -112,95 +112,98 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#1e293b] via-[#2e3b5e] to-[#374151] relative">
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover opacity-80"
-          >
-            <source src="/mobile.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-blue-700/70" />
+      <section className="relative h-[70vh] sm:h-[90vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
+  <div className="absolute inset-0 z-0">
+    <video
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="w-full h-full object-cover opacity-80"
+    >
+      <source src="/mobile.mp4" type="video/mp4" />
+    </video>
+    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-blue-700/70" />
+  </div>
+  <div className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6">
+    <div className="glass-card py-12 px-6 sm:px-10 border border-white/20 flex flex-col items-center shadow-2xl rounded-3xl text-center">
+      <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight drop-shadow-xl">
+        Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
+      </h1>
+      <p className="text-lg sm:text-2xl text-white/90 max-w-xl mb-8">
+        Discover the perfect property with our expert guidance and personalized service.
+      </p>
+
+      {/* Search Form */}
+      <form
+        className="w-full max-w-4xl flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4"
+        onSubmit={handleSearch} // your handler here
+        autoComplete="off"
+      >
+        <div className="relative flex-1">
+          <Search className="absolute top-3 left-4 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Location, property type, or keywords..."
+            className="w-full pl-12 pr-4 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold bg-white"
+            onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+          />
+          {showSuggestions && (
+            <ul className="absolute z-20 top-full left-0 right-0 max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-b-3xl shadow-lg text-gray-900 text-base">
+              {suggestions.map((sugg, idx) => (
+                <li
+                  key={idx}
+                  className="px-6 py-3 cursor-pointer hover:bg-blue-100"
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => handleSuggestionClick(sugg)}
+                >
+                  {sugg}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-6">
-          <div className="glass-card py-16 px-10 border border-white/20 flex flex-col items-center shadow-2xl rounded-3xl text-center">
-            <h1 className="text-6xl font-extrabold text-white mb-4 leading-tight drop-shadow-xl">
-              Find Your <span className="text-yellow-400 animate-pulse">Dream Home</span>
-            </h1>
-            <p className="text-2xl text-white/90 max-w-xl mb-8">
-              Discover the perfect property with our expert guidance and personalized service.
-            </p>
-            {/* Search Form */}
-            <form
-              className="w-full max-w-4xl flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4"
-              onSubmit={handleSearch}
-              autoComplete="off"
-            >
-              <div className="relative flex-1" ref={inputRef}>
-                <Search className="absolute top-3 left-4 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  placeholder="Location, property type, or keywords..."
-                  className="w-full pl-12 pr-4 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-900 font-semibold bg-white"
-                  onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
-                />
-                {showSuggestions && (
-                  <ul className="absolute z-20 top-full left-0 right-0 bg-white border border-gray-300 rounded-b-3xl max-h-60 overflow-y-auto shadow-lg text-gray-900 text-base">
-                    {suggestions.map((sugg, idx) => (
-                      <li
-                        key={idx}
-                        className="px-6 py-3 cursor-pointer hover:bg-blue-100"
-                        onMouseDown={e => e.preventDefault()}
-                        onClick={() => handleSuggestionClick(sugg)}
-                      >
-                        {sugg}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
 
-              <select
-                value={mode}
-                onChange={e => setMode(e.target.value)}
-                className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
-              >
-                <option>Buy</option>
-                <option>Rent</option>
-              </select>
+        <select
+          value={mode}
+          onChange={e => setMode(e.target.value)}
+          className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
+        >
+          <option>Buy</option>
+          <option>Rent</option>
+        </select>
 
-              <select
-                value={type}
-                onChange={e => setType(e.target.value)}
-                className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
-              >
-                <option>All Types</option>
-                <option>House</option>
-                <option>Condo</option>
-                <option>Apartment</option>
-                <option>Townhouse</option>
-                <option>Cabin</option>
-              </select>
+        <select
+          value={type}
+          onChange={e => setType(e.target.value)}
+          className="px-6 py-4 rounded-3xl border border-gray-300 focus:ring-2 focus:ring-blue-400 text-gray-900 font-semibold outline-none bg-white"
+        >
+          <option>All Types</option>
+          <option>House</option>
+          <option>Condo</option>
+          <option>Apartment</option>
+          <option>Townhouse</option>
+          <option>Cabin</option>
+        </select>
 
-              <button
-                type="submit"
-                className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-10 py-4 text-xl font-bold text-blue-900 shadow-lg transition"
-              >
-                <Search className="h-6 w-6 mr-2" />
-                Search
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+        <button
+          type="submit"
+          className="bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center rounded-3xl px-10 py-4 text-xl font-bold text-blue-900 shadow-lg transition"
+        >
+          <Search className="h-6 w-6 mr-2" />
+          Search
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
 
       {/* Featured / Search Results */}
-      <section className="py-20 bg-white/10 backdrop-blur-md">
+      
+      <section className="py-20 bg-white/10 backdrop-blur-md ">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-4xl font-extrabold text-white mb-4">
